@@ -1,6 +1,5 @@
 const app = require("./app");
 const config = require("./app/config");
-const PORT = config.app.port;
 const MongoDB = require("./app/utils/mongodb.util");
 
 async function startSever() {

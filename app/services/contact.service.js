@@ -1,4 +1,4 @@
-const { Object } = require(`mongodb`);
+const { ObjectId } = require("mongodb");
 
 class ContactService {
   constructor(client) {
@@ -12,15 +12,15 @@ class ContactService {
       phone: payload.phone,
       favorite: payload.favorite,
     };
-    Objects.keys(contact).forEach(
-      (key) => contact[key] === undefined && delete [key]
+    // Remove undefined fields
+    Object.keys(contact).forEach(
+      (key) => contact[key] === undefined && delete contact[key]
     );
     return contact;
   }
-
   async create(payload) {
     const contact = this.extractContactData(payload);
-    const result = await this.contact.findOneAndUpdate(
+    const result = await this.Contact.findOneAndUpdate(
       contact,
       { $set: { favorite: contact.favorite === true } },
       { returnDocument: "after", upsert: true }
