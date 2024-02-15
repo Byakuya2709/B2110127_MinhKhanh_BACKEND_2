@@ -1,7 +1,21 @@
-const app = require('./app');
-const config = require('./app/config');
+const app = require("./app");
+const config = require("./app/config");
 const PORT = config.app.port;
+const MongoDB = require("./app/utils/mongodb.util");
 
-app.listen(PORT, ()=>{
-  console.log(`Sever is running on port ${PORT}`);
-})
+async function startSever() {
+  try {
+    await MongoDB.connect(config.db.uri);
+    console.log("connected db");
+
+    const PORT = config.app.port;
+    app.listen(PORT, () => {
+      console.log(`sever is running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.log(`cannot connected db`, error);
+    process.exit();
+  }
+}
+
+startSever();
