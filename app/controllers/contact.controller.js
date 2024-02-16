@@ -10,7 +10,10 @@ exports.create = async (req, res, next) => {
   try {
     const contactService = new ContactService(MongoDB.client);
     const document = await contactService.create(req.body);
-    res.json(document);
+    res.send({
+      message: "create complete",
+      contact: document,
+    });
   } catch (err) {
     return next(
       new ApiError(500, "An error occurred while creating the contact")
@@ -36,11 +39,23 @@ exports.findAll = async (req, res, next) => {
     );
   }
 };
-exports.findOne = (req, res) => {
-  res.send({
-    message: "findOne handler",
-  });
+exports.findOne = async (req, res, next) => {
+  try {
+    const contactService = new ContactService(MongoDB.client);
+    const document = await contactService.findById(req.params.id);
+
+    if (!document) {
+      return next(new ApiError(404, "Cannot found"));
+    }
+
+    return res.send(document);
+  } catch (err) {
+    return next(
+      new ApiError(500, `Error retrieving contact with id = ${req.params.id}`)
+    );
+  }
 };
+
 exports.update = (req, res) => {
   res.send({
     message: "update handler",

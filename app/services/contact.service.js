@@ -34,7 +34,13 @@ class ContactService {
   }
   async findByName(name) {
     return await this.find({
-      name: { $regex: new RegExp(name), $option: "i" },
+      name: { $regex: new RegExp(name), $options: "i" },
+    });
+  }
+
+  async findById(id) {
+    return await this.Contact.findOne({
+      _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
     });
   }
 }
