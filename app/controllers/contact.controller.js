@@ -56,22 +56,45 @@ exports.findOne = async (req, res, next) => {
   }
 };
 
-exports.update = (req, res) => {
-  res.send({
-    message: "update handler",
-  });
+exports.update = async (req, res, next) => {
+  if (Object.keys(req.body).length === 0) {
+    return next(new ApiError(400, `Data not can be empty`));
+  }
+
+  try {
+    const contactService = new ContactService(MongoDB.client);
+    const document = await contactService.update(req.params.id, req.body);
+    if (!document) {
+      return next(new ApiError(404, "Cannot found"));
+    }
+    return res.send({ message: "Contact was updated successfully" });
+  } catch (err) {
+    return next(
+      new ApiError(500, `Error updating contact with id = ${req.params.id}`)
+    );
+  }
 };
-exports.delete = (req, res) => {
-  res.send({
-    message: "delete handler",
-  });
+exports.delete = async (req, res, next) => {
+  try {
+    const contactService = new ContactService(MongoDB.client);
+    const document = await contactService.delete(req.params.id);
+    if (!document) {
+      return next(new ApiError(404, "Cannot found"));
+    }
+    return res.send({ message: "Contact was deleted successfully" });
+  } catch (err) {
+    return next(
+      new ApiError(500, `Error deleting contact with id = ${req.params.id}`)
+    );
+  }
 };
-exports.deleteAll = (req, res) => {
+
+exports.deleteAll = async (req, res, next) => {
   res.send({
     message: "deleteAllhandler",
   });
 };
-exports.findAllFavorite = (req, res) => {
+exports.findAllFavorite = async (req, res, next) => {
   res.send({
     message: "findAllFavorite handler",
   });
