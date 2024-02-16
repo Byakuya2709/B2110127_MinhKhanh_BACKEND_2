@@ -95,7 +95,13 @@ exports.deleteAll = async (req, res, next) => {
   });
 };
 exports.findAllFavorite = async (req, res, next) => {
-  res.send({
-    message: "findAllFavorite handler",
-  });
+  try {
+    const contactService = new ContactService(MongoDB.client);
+    const documents = await contactService.findFavorite();
+    return res.send(documents);
+  } catch (err) {
+    return next(
+      new ApiError(500, `An Error  while retrieving favorrite contact`)
+    );
+  }
 };
