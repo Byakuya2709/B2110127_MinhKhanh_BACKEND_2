@@ -67,7 +67,10 @@ exports.update = async (req, res, next) => {
     if (!document) {
       return next(new ApiError(404, "Cannot found"));
     }
-    return res.send({ message: "Contact was updated successfully" });
+    return res.send({
+      message: "Contact was updated successfully",
+      contact: document,
+    });
   } catch (err) {
     return next(
       new ApiError(500, `Error updating contact with id = ${req.params.id}`)
@@ -81,7 +84,10 @@ exports.delete = async (req, res, next) => {
     if (!document) {
       return next(new ApiError(404, "Cannot found"));
     }
-    return res.send({ message: "Contact was deleted successfully" });
+    return res.send({
+      message: "Contact was deleted successfully",
+      contact: document,
+    });
   } catch (err) {
     return next(
       new ApiError(500, `Error deleting contact with id = ${req.params.id}`)
